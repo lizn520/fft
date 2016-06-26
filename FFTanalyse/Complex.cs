@@ -7,12 +7,19 @@ using System.Windows.Forms;
 namespace FFTanalyse
 {
     /// <summary>
-    /// 复数类 a+b*i
+    /// 复数类 re+im*i
     /// </summary>
     class Complex
     {
+        /// <summary>
+        ///私有变量
+        /// re 实部 
+        /// im 虚部
+        /// </summary>
         private  double re, im;
-
+        /// <summary>
+        /// 属性 实部 Re
+        /// </summary>
         public double Re
         {
             get
@@ -24,6 +31,9 @@ namespace FFTanalyse
                 re = value;
             }
         }
+        /// <summary>
+        /// 属性 虚部 Im
+        /// </summary>
         public double Im
         {
             get
@@ -35,6 +45,9 @@ namespace FFTanalyse
                 im = value;
             }
         }
+        /// <summary>
+        /// 弧度
+        /// </summary>
         public double Theta
         {
             get { return Math.Atan2(im, re); }
@@ -44,10 +57,16 @@ namespace FFTanalyse
                 im = Math.Sin(value);
             }
         }
+        /// <summary>
+        /// 角度
+        /// </summary>
         public double Angle
         {
             get { return Math.Atan2(im, re) / Math.PI * 180; }
         }
+        /// <summary>
+        /// 模长
+        /// </summary>
         public double Length
         {
             get
@@ -112,6 +131,12 @@ namespace FFTanalyse
             }
             return s;
         }
+        /// <summary>
+        /// 复数加法运算
+        /// </summary>
+        /// <param name="lhs">左操作数</param>
+        /// <param name="rhs">右操作数</param>
+        /// <returns></returns>
         public static Complex operator +(Complex lhs, Complex rhs)
         {
             Complex result = new Complex();
@@ -122,6 +147,12 @@ namespace FFTanalyse
             result.im = lhs.im + rhs.im;
             return result;
         }
+        /// <summary>
+        /// 复数减法
+        /// </summary>
+        /// <param name="lhs">左操作数</param>
+        /// <param name="rhs">右操作数</param>
+        /// <returns></returns>
         public static Complex operator -(Complex lhs, Complex rhs)
         {
             Complex result = new Complex();
@@ -132,6 +163,12 @@ namespace FFTanalyse
             result.im = lhs.im - rhs.im;
             return result;
         }
+        /// <summary>
+        /// 复数乘法
+        /// </summary>
+        /// <param name="lhs">左操作数</param>
+        /// <param name="rhs">右操作数</param>
+        /// <returns></returns>
         public static Complex operator *(Complex lhs, Complex rhs)
         {
             Complex result = new Complex();
@@ -142,6 +179,12 @@ namespace FFTanalyse
             result.im = lhs.re * rhs.im + lhs.im * rhs.re;
             return result;
         }
+        /// <summary>
+        /// 复数除法
+        /// </summary>
+        /// <param name="lhs">左操作数</param>
+        /// <param name="rhs">右操作数</param>
+        /// <returns></returns>
         public static Complex operator /(Complex lhs, Complex rhs)
         {
             Complex result = new Complex();
