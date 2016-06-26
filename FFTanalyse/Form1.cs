@@ -33,6 +33,7 @@ namespace FFTanalyse
             Complex c = a * b;
            // MessageBox.Show(b.Length.ToString());
             MessageBox.Show(c.ToString(0)+" "+c.Angle.ToString ());
+
         }
     }
 }
