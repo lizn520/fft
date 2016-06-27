@@ -21,24 +21,35 @@ namespace FFTanalyse
         {
 
         }
-        ArrayList dat = new ArrayList();
-        Complex[] FFT(Complex[] dat)
+        ArrayList datarraylist = new ArrayList();
+        
+        void FFT(ref Complex [] dat)
         {
-            return null;
+            int M = 3;
+            int N = (int)Math.Pow(2, 3);
+            DataInvert(ref dat);
+            for (int L = 1; L <= M; L++)
+            {
+                int B = (int)Math.Pow(2, L - 1);
+                for (int J = 0; J < B; J++) 
+                {
+                    int P = (int)Math.Pow(2, M - L)*J;
+                    int S = (int)Math.Pow(2, L);
+                    for(int k=J;k<=N-1;k+=S)
+                    {
+                        Complex WnP = new Complex(2 * Math.PI * P / N);
+                        Complex T = dat[k] + (dat[k + B] * WnP);
+                        dat[k + B] = dat[k] - (dat[k + B] * WnP);
+                        dat[k] = T;
+                    }
+                }
+            }
         }
-        void DataInvert(ref ArrayList dat)
+        void DataInvert(ref Complex [] dat)
         {
             //data count "M" must be 2^N
-            int N = dat.Count;
+            int N = dat.Length ;
             int LH = N / 2;
-           // int[] I = new int[N];
-           // int[] J = new int[N];
-            //for (int i = 0; i < N; i++) 
-            //{
-            //    I[i] = i;
-            //    J[i] = i;
-            //}
-
             int K;
             int J = LH;
             int N1 = N - 2;
@@ -46,12 +57,11 @@ namespace FFTanalyse
             {
                 if(I<J)
                 {
-                    object Temp = dat[I];
+                    Complex  Temp = dat[I];
                     dat[I] = dat[J];
                     dat[J] = Temp;
                 }
                 K = LH;
-              //  J////= J[i - 1];
                 while (J>=K)
                 {
                     J -= K;
@@ -62,18 +72,30 @@ namespace FFTanalyse
         }
         private void button1_Click(object sender, EventArgs e)
         {
+            
             Complex a = new Complex(1, 3);
             Complex b = new Complex(2, 2); 
             Complex c = a * b;
             // MessageBox.Show(b.Length.ToString());
             // MessageBox.Show(c.ToString(0)+" "+c.Angle.ToString ());
-            for(int i=0;i<8;i++)
-            dat.Add(new Complex(1, i));
+            
+
+            Complex[] dat = new Complex[8];
+            for (int i = 0; i < 8; i++)
+                dat[i]=(new Complex(1, i));
+
             DataInvert(ref dat);
-            for (int i = 0; i < dat.Count; i++)
+            for (int i = 0; i < dat.Length; i++)
             {
-                Complex temp = (Complex)dat[i];
-                PrintOutbox(temp.ToString(0));
+                //Complex temp = (Complex)dat[i];
+                PrintOutbox(dat[i].ToString(0));
+            }
+            FFT(ref dat);
+            PrintOutbox("FFT:");
+            for (int i = 0; i < dat.Length; i++)
+            {
+                //Complex temp = (Complex)dat[i];
+                PrintOutbox(dat[i].ToString(0));
             }
 
         }
