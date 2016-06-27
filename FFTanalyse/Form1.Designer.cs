@@ -29,23 +29,51 @@
         private void InitializeComponent()
         {
             this.button1 = new System.Windows.Forms.Button();
+            this.panel1 = new System.Windows.Forms.Panel();
+            this.panel2 = new System.Windows.Forms.Panel();
+            this.OutBox = new System.Windows.Forms.RichTextBox();
             this.SuspendLayout();
             // 
             // button1
             // 
-            this.button1.Location = new System.Drawing.Point(58, 84);
+            this.button1.Location = new System.Drawing.Point(571, 419);
             this.button1.Name = "button1";
             this.button1.Size = new System.Drawing.Size(75, 23);
             this.button1.TabIndex = 0;
-            this.button1.Text = "button1";
+            this.button1.Text = "LOAD";
             this.button1.UseVisualStyleBackColor = true;
             this.button1.Click += new System.EventHandler(this.button1_Click);
+            // 
+            // panel1
+            // 
+            this.panel1.Location = new System.Drawing.Point(13, 13);
+            this.panel1.Name = "panel1";
+            this.panel1.Size = new System.Drawing.Size(446, 191);
+            this.panel1.TabIndex = 1;
+            // 
+            // panel2
+            // 
+            this.panel2.Location = new System.Drawing.Point(13, 210);
+            this.panel2.Name = "panel2";
+            this.panel2.Size = new System.Drawing.Size(446, 183);
+            this.panel2.TabIndex = 2;
+            // 
+            // OutBox
+            // 
+            this.OutBox.Location = new System.Drawing.Point(466, 13);
+            this.OutBox.Name = "OutBox";
+            this.OutBox.Size = new System.Drawing.Size(194, 380);
+            this.OutBox.TabIndex = 3;
+            this.OutBox.Text = "";
             // 
             // Form1
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(6F, 12F);
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
-            this.ClientSize = new System.Drawing.Size(284, 261);
+            this.ClientSize = new System.Drawing.Size(672, 454);
+            this.Controls.Add(this.OutBox);
+            this.Controls.Add(this.panel2);
+            this.Controls.Add(this.panel1);
             this.Controls.Add(this.button1);
             this.Name = "Form1";
             this.Text = "Form1";
@@ -57,6 +85,9 @@
         #endregion
 
         private System.Windows.Forms.Button button1;
+        private System.Windows.Forms.Panel panel1;
+        private System.Windows.Forms.Panel panel2;
+        private System.Windows.Forms.RichTextBox OutBox;
     }
 }
 
