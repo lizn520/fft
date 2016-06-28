@@ -23,6 +23,7 @@ namespace FFTanalyse
             InitializeComponent();
             plot1 = new PlotView();
             this.plotmodel = plotmodel;
+            this.Text = plotmodel.Title;
             this.SuspendLayout();
             // 
             // plot1

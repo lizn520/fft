@@ -27,8 +27,8 @@ namespace FFTanalyse
         
         void FFT(ref Complex [] dat)
         {
-            int M = 3;
-            int N = (int)Math.Pow(2, 3);
+            int M = (int)(Math.Log((float)dat.Length) / Math.Log(2f));
+            int N = (int)Math.Pow(2, M);
             DataInvert(ref dat);
             for (int L = 1; L <= M; L++)
             {
@@ -70,7 +70,7 @@ namespace FFTanalyse
             int K;
             int J = LH;
             int N1 = N - 2;
-            for (int I = 1; I < N1; I++) 
+            for (int I = 1; I <= N1; I++) 
             {
                 if(I<J)
                 {
@@ -87,42 +87,46 @@ namespace FFTanalyse
                 J += K;
             }
         }
+        private List<drawWindow> drawWindowsList = new List<drawWindow>();
         private void button1_Click(object sender, EventArgs e)
         {
-
-            Complex a = new Complex(15.6, 3.99);
-            Complex b = new Complex(2.66, -2.88);
-            Complex c = a / 2;
-            // MessageBox.Show(b.Length.ToString());
-            // MessageBox.Show(c.ToString(0)+" "+c.Angle.ToString ());
-            PrintOutbox(c.ToString(0));
-
-            Complex[] dat = new Complex[8];
-            for (int i = 0; i < 8; i++)
+            int N = 64;
+            Complex[] dat = new Complex[N];
+            for (int i = 0; i < dat.Length; i++)
                 dat[i] = (new Complex(i, 0));
+
             for (int i = 0; i < dat.Length; i++)
             {
-                //Complex temp = (Complex)dat[i];
-                PrintOutbox(dat[i].Length.ToString());
+                PrintOutbox(dat[i].ToString(0));
             }
+
+            drawWindowsList.Add(new drawWindow(generateplotmodel(dat,"原始序列")));
+            //DataInvert(ref dat);
+            //PrintOutbox("倒序:");
+            //for (int i = 0; i < dat.Length; i++)
+            //{
+            //    PrintOutbox(dat[i].ToString(0));
+            //}
             FFT(ref dat);
             PrintOutbox("FFT:");
             for (int i = 0; i < dat.Length; i++)
             {
-                //Complex temp = (Complex)dat[i];
                 PrintOutbox(dat[i].ToString(0));
             }
-            //PrintOutbox("IFFT:");
-            //IFFT(ref dat);
-            //for (int i = 0; i < dat.Length; i++)
-            //{
-            //    //Complex temp = (Complex)dat[i];
-            //    PrintOutbox(dat[i].ToString(0));
-            //}
+            drawWindowsList.Add(new drawWindow(generateplotmodel(dat, "FFT序列")));
+            PrintOutbox("IFFT:");
+            IFFT(ref dat);
+            for (int i = 0; i < dat.Length; i++)
+            {
+                PrintOutbox(dat[i].ToString(0));
+            }
+            drawWindowsList.Add(new drawWindow(generateplotmodel(dat, "反变换序列")));
 
-         
-            drawWindow win1 = new drawWindow(generateplotmodel(dat));
-            win1.Show();
+
+           for(int i=0;i<drawWindowsList.Count;i++)
+            {
+                drawWindowsList[i].Show();
+            }
 
         }
         void PrintOutbox(string outstring)
@@ -130,9 +134,9 @@ namespace FFTanalyse
             this.OutBox.AppendText(outstring + "\n");
         }
 
-        PlotModel generateplotmodel(Complex[] dat)
+        PlotModel generateplotmodel(Complex[] dat,string Tittle)
         {
-            PlotModel plotmodelTemp = new PlotModel { Title = "Example 1" };
+            PlotModel plotmodelTemp = new PlotModel { Title = Tittle };
             List<DataPoint> datlist = new List<DataPoint>();
             for (int i = 0; i < dat.Length; i++)
             {
