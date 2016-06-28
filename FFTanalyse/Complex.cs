@@ -197,6 +197,16 @@ namespace FFTanalyse
             result.im /= a2b2;
             return result;
         }
+        public static Complex operator /(Complex lhs, double rhs)
+        {
+            Complex result = new Complex();
+            /*
+            (a+b*i)/N=(a/N)+(b/N)*i
+            */
+            result.re /= lhs.re / rhs;
+            result.im /= lhs.im / rhs;
+            return result;
+        }
     }
     
 }
