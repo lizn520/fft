@@ -102,7 +102,7 @@ namespace FFTanalyse
         public Complex(double theta)
         {
             re = Math.Cos(theta);
-            im = Math.Sin(theta);
+            im = -Math.Sin(theta);
         }
         /// <summary>
         /// 返回共轭复数

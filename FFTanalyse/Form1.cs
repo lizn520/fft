@@ -31,15 +31,16 @@ namespace FFTanalyse
             for (int L = 1; L <= M; L++)
             {
                 int B = (int)Math.Pow(2, L - 1);
-                for (int J = 0; J < B; J++) 
+                for (int J = 0; J <= B - 1; J++) 
                 {
-                    int P = (int)Math.Pow(2, M - L)*J;
+                    int P = (int)Math.Pow(2, M - L) * J;
                     int S = (int)Math.Pow(2, L);
                     for(int k=J;k<=N-1;k+=S)
                     {
                         Complex WnP = new Complex(2 * Math.PI * P / N);
-                        Complex T = dat[k] + (dat[k + B] * WnP);
-                        dat[k + B] = dat[k] - (dat[k + B] * WnP);
+                        Complex CB = dat[k + B] * WnP;
+                        Complex T = dat[k] + CB;
+                        dat[k + B] = dat[k] - CB;
                         dat[k] = T;
                     }
                 }
@@ -73,22 +74,20 @@ namespace FFTanalyse
         private void button1_Click(object sender, EventArgs e)
         {
             
-            Complex a = new Complex(1, 3);
-            Complex b = new Complex(2, 2); 
-            Complex c = a * b;
+            Complex a = new Complex(15.6, 3.99);
+            Complex b = new Complex(2.66, -2.88); 
+            Complex c = a / b;
             // MessageBox.Show(b.Length.ToString());
             // MessageBox.Show(c.ToString(0)+" "+c.Angle.ToString ());
-            
+           // PrintOutbox(c.ToString(0));
 
             Complex[] dat = new Complex[8];
             for (int i = 0; i < 8; i++)
-                dat[i]=(new Complex(1, i));
-
-            DataInvert(ref dat);
+                dat[i]=(new Complex(i, 0));
             for (int i = 0; i < dat.Length; i++)
             {
                 //Complex temp = (Complex)dat[i];
-                PrintOutbox(dat[i].ToString(0));
+                PrintOutbox(dat[i].Length.ToString() );
             }
             FFT(ref dat);
             PrintOutbox("FFT:");
@@ -96,6 +95,12 @@ namespace FFTanalyse
             {
                 //Complex temp = (Complex)dat[i];
                 PrintOutbox(dat[i].ToString(0));
+            }
+            PrintOutbox("FFTangle:");
+            for (int i = 0; i < dat.Length; i++)
+            {
+                //Complex temp = (Complex)dat[i];
+                PrintOutbox(dat[i].Theta .ToString());
             }
 
         }
