@@ -41,9 +41,6 @@ namespace FFTanalyse
 
             this.Controls.Add(this.plot1 );
             this.ResumeLayout(false);
-
-           
-           // this.plot1.Show();
         }
 
         private void draw_Paint(object sender, PaintEventArgs e)
