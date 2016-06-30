@@ -45,10 +45,8 @@ namespace FFTanalyse
 
         private void draw_Paint(object sender, PaintEventArgs e)
         {
-             OxyPlot.PlotModel myModel = new OxyPlot.PlotModel { Title = "Example 1" };
-            myModel.Series.Add(new FunctionSeries(Math.Cos, 0, 10, 0.1, "cos(x)"));
-
-            
+            // OxyPlot.PlotModel myModel = new OxyPlot.PlotModel { Title = "Example 1" };
+            //myModel.Series.Add(new FunctionSeries(Math.Cos, 0, 10, 0.1, "cos(x)"));
             this.plot1.Model = plotmodel;
         }
 

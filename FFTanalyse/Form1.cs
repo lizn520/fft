@@ -118,7 +118,6 @@ namespace FFTanalyse
             {
                 PrintOutbox(dat[i].ToString(0));
             }
-
             drawWindowsList.Add(new drawWindow(generateplotmodel(dat,"原始序列")));
 
             FFT(ref dat);
@@ -143,8 +142,6 @@ namespace FFTanalyse
             {
                 drawWindowsList[i].Show();
             }
-            
-
         }
         /// <summary>
         /// 从输出框输出信息
@@ -163,17 +160,26 @@ namespace FFTanalyse
         PlotModel generateplotmodel(Complex[] dat,string Tittle)
         {
             PlotModel plotmodelTemp = new PlotModel { Title = Tittle };
+            
             List<DataPoint> datlist = new List<DataPoint>();
             for (int i = 0; i < dat.Length; i++)
             {
                 datlist.Add(new DataPoint(i, dat[i].Length));
             }
-            StemSeries s1 = new StemSeries
+
+            StemSeries  s1 = new StemSeries
             {
                 Title = "Example 1",
                 ItemsSource = datlist
             };
-            plotmodelTemp.Series.Add(s1);
+            ScatterSeries s2 = new ScatterSeries { MarkerType = MarkerType.Cross };
+            
+            for (int i = 0; i < dat.Length; i++)
+            {
+                s2.Points.Add(new ScatterPoint(i, dat[i].Length,10,500));
+            }
+            plotmodelTemp.Series.Add(s1); 
+           // plotmodelTemp.Axes.Add(new LinearColorAxis { Position = AxisPosition.Right, Palette = OxyPalettes.Jet(200) });
             return plotmodelTemp;
         }
         List<string> ReadData()
@@ -184,8 +190,6 @@ namespace FFTanalyse
             if(openfile.ShowDialog ()==DialogResult.OK)
             {
                 dataFileName = openfile.FileName;
-               //MessageBox.Show(dataFileName);
-                
                 try
                 {
                     FileStream file = new FileStream(@dataFileName, FileMode.Open);
@@ -196,27 +200,23 @@ namespace FFTanalyse
                         dataList.Add(temp);
                         temp = reader.ReadLine();
                     }
-                    
-
                 }
                 catch(Exception ex)
                 {
                     MessageBox.Show(ex.ToString());
                 }
-                
             }
             else
             {
                 MessageBox.Show("未选择文件");
             }
-            
              return dataList;
         }
         void HighPassFilter(ref Complex[] dat)
         {
-            for(int i=10;i<240;i++)
+            for(int i=256;i<257;i++)
             {
-                dat[i] = new Complex();
+                dat[i] = new Complex(7,0);
             }
         }
     }
