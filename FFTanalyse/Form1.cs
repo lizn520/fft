@@ -11,13 +11,22 @@ using System.Collections;
 using OxyPlot;
 using OxyPlot.Series;
 using System.IO;
+using Oraycn.MPlayer;
+using Oraycn.MCapture;
 namespace FFTanalyse
 {
     public partial class Form1 : Form
     {
+        //音频接口
+        private IAudioPlayer audioPlayer;
+        private IMicrophoneCapturer microphoneCapturer;
         public Form1()
         {
             InitializeComponent();
+            for(int i=0;i<voicefft.Length;i++)
+            {
+                voicefft[i] = new Complex();
+            }
         }
 
         private void Form1_Load(object sender, EventArgs e)
@@ -109,11 +118,14 @@ namespace FFTanalyse
         private void button1_Click(object sender, EventArgs e)
         {
             List<string> readDataList = ReadData();
-            int N = readDataList.Count;
+            int N = int.Parse(FFTcount.Text) ;
             Complex[] dat = new Complex[N];
-            for (int i = 0; i < dat.Length; i++)
+            for (int i = 0; i < readDataList.Count; i++)
                 dat[i] = new Complex(double.Parse(readDataList[i]), 0);
-
+            for(int i= readDataList.Count;i<dat.Length;i++)
+            {
+                dat[i] = new Complex();
+            }
             for (int i = 0; i < dat.Length; i++)
             {
                 PrintOutbox(dat[i].ToString(0));
@@ -167,17 +179,19 @@ namespace FFTanalyse
                 datlist.Add(new DataPoint(i, dat[i].Length));
             }
 
-            StemSeries  s1 = new StemSeries
+            StemSeries s1 = new StemSeries
             {
                 Title = "Example 1",
                 ItemsSource = datlist
             };
-            ScatterSeries s2 = new ScatterSeries { MarkerType = MarkerType.Cross };
+            ScatterSeries s2 = new ScatterSeries { MarkerType = MarkerType.Circle , Title = "Example 1" };
             
             for (int i = 0; i < dat.Length; i++)
             {
                 s2.Points.Add(new ScatterPoint(i, dat[i].Length,10,500));
             }
+            LineSeries lineSeries = new LineSeries { Title = "Example 1",ItemsSource= datlist };
+
             plotmodelTemp.Series.Add(s1); 
            // plotmodelTemp.Axes.Add(new LinearColorAxis { Position = AxisPosition.Right, Palette = OxyPalettes.Jet(200) });
             return plotmodelTemp;
@@ -214,9 +228,116 @@ namespace FFTanalyse
         }
         void HighPassFilter(ref Complex[] dat)
         {
-            for(int i=256;i<257;i++)
+            for(int i=63;i<65;i++)
             {
                 dat[i] = new Complex(7,0);
+            }
+        }
+
+        private void textBox1_TextChanged(object sender, EventArgs e)
+        {
+
+        }
+
+        private void button2_Click(object sender, EventArgs e)
+        {
+            for(int i=0;i<drawWindowsList.Count;i++)
+            {
+                drawWindowsList[i].Close();
+            }
+            drawWindowsList.Clear();
+            OutBox.Clear();
+        }
+        List<DataPoint> datlist = new List<DataPoint>();
+        drawWindow audiowindow;
+        PlotModel plotmodelTemp;
+        LineSeries lineSeries;
+        private void button3_Click(object sender, EventArgs e)
+        {
+            if(audiolabel.Text == "AudioOff")
+            {
+                try
+                {
+                    this.microphoneCapturer = CapturerFactory.CreateMicrophoneCapturer(0);
+                    int sm = this.microphoneCapturer.SampleRate;
+                    this.microphoneCapturer.AudioCaptured += new ESBasic.CbGeneric<byte[]>(microphoneCapturer_AudioCaptured);
+                    this.audioPlayer = PlayerFactory.CreateAudioPlayer(0, 16000, 1, 16, 2);
+                    this.microphoneCapturer.Start();
+                    audiolabel.Text = "AudioOn";
+                    audioButton.Text = "Stop";
+                    //this.label_msg.Text = "正在采集麦克风，并播放 . . .";
+                    //this.label_msg.Visible = true;
+                    //this.button_wav.Enabled = false;
+                    //this.button_mic.Enabled = false;
+                    //this.button_stop.Enabled = true;
+                }
+                catch (Exception ee)
+                {
+                    MessageBox.Show(ee.Message);
+                }
+
+                plotmodelTemp = new PlotModel { Title = "声音" };
+                lineSeries = new LineSeries { Title = "Example 1", ItemsSource = datlist };
+                StemSeries s1 = new StemSeries { Title = "Example 1", ItemsSource = datlist };
+                plotmodelTemp.Series.Add(s1);
+                audiowindow= new drawWindow(plotmodelTemp);
+                audiowindow.Show();
+            }
+            else
+            {
+                if (this.audioPlayer == null)
+                {
+                    return;
+                }
+
+                if (this.microphoneCapturer != null)
+                {
+                    this.microphoneCapturer.Stop();
+                    this.microphoneCapturer.Dispose();
+                    this.microphoneCapturer = null;
+                }
+
+                this.audioPlayer.Clear();
+                this.audioPlayer.Dispose();
+                this.audioPlayer = null;
+                audiolabel.Text = "AudioOff";
+                audioButton.Text = "Audio";
+                //this.label_msg.Visible = false;
+                //this.button_wav.Enabled = true;
+                //this.button_mic.Enabled = true;
+                //this.button_stop.Enabled = false;
+            }
+            
+        }
+        Complex[] voicefft = new Complex[1024];
+        void microphoneCapturer_AudioCaptured(byte[] audioData)
+        {
+            
+            for (int i=0;i<audioData.Length;i++)
+            {
+                voicefft[i].Re = (float)audioData[i];
+                voicefft[i].Im = 0;
+            }
+            for(int i= audioData.Length;i<1024;i++)
+            {
+                voicefft[i].Re = 0;
+                voicefft[i].Im = 0;
+            }
+            FFT(ref voicefft);
+            if (this.audioPlayer != null)
+            {
+                //this.audioPlayer.Play(audioData);
+                datlist.Clear();
+               /* for(int i=0;i<audioData.Length;i++)
+                {
+                    datlist.Add(new DataPoint(i, audioData[i]));
+                }
+                plotmodelTemp.InvalidatePlot(true);*/
+                for(int i=0;i<voicefft.Length;i++)
+                {
+                    datlist.Add(new DataPoint(i, voicefft[i].Length));
+                }
+                plotmodelTemp.InvalidatePlot(true);
             }
         }
     }

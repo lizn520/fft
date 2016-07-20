@@ -34,6 +34,9 @@
     <WarningLevel>4</WarningLevel>
   </PropertyGroup>
   <ItemGroup>
+    <Reference Include="ESBasic">
+      <HintPath>Dlls\ESBasic.dll</HintPath>
+    </Reference>
     <Reference Include="Eto, Version=2.2.0.0, Culture=neutral, processorArchitecture=MSIL">
       <HintPath>..\packages\Eto.Forms.2.2.0\lib\net45\Eto.dll</HintPath>
       <Private>True</Private>
@@ -41,6 +44,12 @@
     <Reference Include="Eto.OxyPlot, Version=1.0.5911.41864, Culture=neutral, processorArchitecture=MSIL">
       <HintPath>..\packages\Eto.OxyPlot.1.1-beta\lib\net45\Eto.OxyPlot.dll</HintPath>
       <Private>True</Private>
+    </Reference>
+    <Reference Include="Oraycn.MCapture">
+      <HintPath>Dlls\Oraycn.MCapture.dll</HintPath>
+    </Reference>
+    <Reference Include="Oraycn.MPlayer">
+      <HintPath>Dlls\Oraycn.MPlayer.dll</HintPath>
     </Reference>
     <Reference Include="OxyPlot, Version=1.0.0.0, Culture=neutral, PublicKeyToken=638079a8f0bd61e9, processorArchitecture=MSIL">
       <HintPath>..\packages\OxyPlot.Core.1.0.0-unstable2100\lib\net45\OxyPlot.dll</HintPath>
